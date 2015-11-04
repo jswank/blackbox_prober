@@ -1,6 +1,7 @@
 package pingers
 
 import (
+	"golang.org/x/net/icmp"
 	"net/url"
 	"testing"
 
@@ -8,6 +9,14 @@ import (
 )
 
 func TestICMP(t *testing.T) {
+
+	socket, err := icmp.ListenPacket("udp4", "0.0.0.0")
+	if err != nil {
+		t.Log("ICMP echo/reply is non-functional for this user")
+		return
+	}
+	defer socket.Close()
+
 	u, err := url.Parse("icmp://localhost")
 	if err != nil {
 		t.Fatal(err)
